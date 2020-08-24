@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">AplikasiGithubUserAPI</string>
+
+    <string name="Username">Username</string>
+    <string name="Url">URL</string>
+    <string name="search_hint">Masukkan Username</string>
+    <string name="search">Search</string>
+
+</resources>
