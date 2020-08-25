@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         rvUser.setHasFixedSize(true);
 
-        userAdapter = new UserAdapter(list);
+        userAdapter = new UserAdapter();
 
         showRecyclerList();
         getListUser();
@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
                         user.setUsername(username);
                         user.setAvatar(avatar);
                         user.setUrl(url);
+
                         list.add(user);
                     }
                     userAdapter.setData(list);
@@ -109,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void showRecyclerList(){
         rvUser.setLayoutManager(new LinearLayoutManager(this));
-        UserAdapter userAdapter = new UserAdapter(list);
         rvUser.setAdapter(userAdapter);
     }
 

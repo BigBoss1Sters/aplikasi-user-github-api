@@ -15,11 +15,7 @@ import com.bumptech.glide.request.RequestOptions;
 import java.util.ArrayList;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ListViewHolder> {
-    private ArrayList<User> listUser;
-
-    public UserAdapter(ArrayList<User> list) {
-        this.listUser = list;
-    }
+    private ArrayList<User> listUser = new ArrayList<>();
 
     @NonNull
     @Override
