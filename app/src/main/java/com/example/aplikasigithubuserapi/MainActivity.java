@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private ArrayList<User> list = new ArrayList<>();
     private ProgressBar progressBar;
+    UserAdapter userAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +41,13 @@ public class MainActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         rvUser.setHasFixedSize(true);
 
-        list.addAll(getListUser());
+        userAdapter = new UserAdapter(list);
+
         showRecyclerList();
+        getListUser();
     }
 
-    public ArrayList<User> getListUser() {
-        final ArrayList<User> list = new ArrayList<>();
+    public void getListUser() {
         progressBar.setVisibility(View.VISIBLE);
         AsyncHttpClient asyncHttpClient1 = new AsyncHttpClient();
         asyncHttpClient1.addHeader("User-Agent", "request");
@@ -75,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
                         list.add(user);
                     }
+                    userAdapter.setData(list);
                 } catch (Exception e) {
                     Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
@@ -103,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        return list;
     }
 
     private void showRecyclerList(){
