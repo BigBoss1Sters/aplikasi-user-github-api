@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
                         user.setUsername(username);
                         user.setAvatar(avatar);
                         user.setUrl(url);
-
                         list.add(user);
                     }
                     userAdapter.setData(list);
