@@ -70,18 +70,16 @@ public class MainActivity extends AppCompatActivity {
 
                 try {
                     JSONObject jsonObject = new JSONObject(result);
-                    JSONArray jsonArray = jsonObject.getJSONArray("items");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject item = jsonArray.getJSONObject(i);
-                        String username = item.getString("login");
-                        String avatar = item.getString("avatar_url");
-                        String url = item.getString("url");
-                        String name = item.getString("name");
-                        String location = item.getString("location");
-                        String company = item.getString("company");
-                        int repository = item.getInt("public_repos");
-                        int followers = item.getInt("followers");
-                        int following = item.getInt("following");
+
+                        String username = jsonObject.getString("login");
+                        String avatar = jsonObject.getString("avatar_url");
+                        String url = jsonObject.getString("url");
+                        String name = jsonObject.getString("name");
+                        String location = jsonObject.getString("location");
+                        String company = jsonObject.getString("company");
+                        int repository = jsonObject.getInt("public_repos");
+                        int followers = jsonObject.getInt("followers");
+                        int following = jsonObject.getInt("following");
 
                         User user = new User();
                         user.setUsername(username);
@@ -95,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
                         user.setFollowing(following);
 
                         list.add(user);
-                    }
                     userAdapter.setData(list);
                 } catch (Exception e) {
                     Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -142,8 +139,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, result);
 
                 try {
-                    JSONObject jsonObject = new JSONObject(result);
-                    JSONArray jsonArray = jsonObject.getJSONArray("items");
+                    JSONArray jsonArray = new JSONArray(result);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject item = jsonArray.getJSONObject(i);
                         String username = item.getString("login");
@@ -194,8 +190,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, result);
 
                 try {
-                    JSONObject jsonObject = new JSONObject(result);
-                    JSONArray jsonArray = jsonObject.getJSONArray("items");
+                   JSONArray jsonArray = new JSONArray(result);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject item = jsonArray.getJSONObject(i);
                         String username = item.getString("login");
