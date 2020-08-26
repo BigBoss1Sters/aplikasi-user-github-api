@@ -17,6 +17,11 @@ import java.util.ArrayList;
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ListViewHolder> {
     private ArrayList<User> listUser = new ArrayList<>();
 
+    private OnItemClickCallback onItemClickCallback;
+    public void setOnItemClickCallback(OnItemClickCallback onItemClickCallback) {
+        this.onItemClickCallback = onItemClickCallback;
+    }
+
     @NonNull
     @Override
     public ListViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
@@ -26,13 +31,24 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ListViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull final ListViewHolder holder, int position) {
-        User user = listUser.get(position);
+        final User user = listUser.get(position);
         Glide.with(holder.itemView.getContext())
                 .load(user.getAvatar())
                 .apply(new RequestOptions().override(55, 55))
                 .into(holder.avatar);
         holder.tvUsername.setText(user.getUsername());
         holder.tvUrl.setText(user.getUrl());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickCallback.onItemClicked(user);
+            }
+        });
+    }
+
+    public interface OnItemClickCallback {
+        void onItemClicked(User data);
     }
 
     @Override

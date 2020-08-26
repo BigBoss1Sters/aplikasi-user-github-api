@@ -8,6 +8,7 @@ import androidx.appcompat.widget.SearchView;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -53,12 +54,12 @@ public class MainActivity extends AppCompatActivity {
         getListUser();
     }
 
-    public void getListUser(String username) {
+    public void getListUsers(String username) {
         progressBar.setVisibility(View.VISIBLE);
         AsyncHttpClient asyncHttpClient1 = new AsyncHttpClient();
         asyncHttpClient1.addHeader("User-Agent", "request");
         asyncHttpClient1.addHeader("Authorization", "token a8d0fa76f1dbc00b8f0227b6bc1c619c9dd2406c");
-        asyncHttpClient1.get("https://api.github.com/search/users?q="+username, new AsyncHttpResponseHandler(){
+        asyncHttpClient1.get("https://api.github.com/search/users/"+username, new AsyncHttpResponseHandler(){
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -75,11 +76,23 @@ public class MainActivity extends AppCompatActivity {
                         String username = item.getString("login");
                         String avatar = item.getString("avatar_url");
                         String url = item.getString("url");
+                        String name = item.getString("name");
+                        String location = item.getString("location");
+                        String company = item.getString("company");
+                        int repository = item.getInt("public_repos");
+                        int followers = item.getInt("followers");
+                        int following = item.getInt("following");
 
                         User user = new User();
                         user.setUsername(username);
                         user.setAvatar(avatar);
                         user.setUrl(url);
+                        user.setName(name);
+                        user.setLocation(location);
+                        user.setCompany(company);
+                        user.setRepository(repository);
+                        user.setFollower(followers);
+                        user.setFollowing(following);
 
                         list.add(user);
                     }
@@ -119,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         AsyncHttpClient asyncHttpClient1 = new AsyncHttpClient();
         asyncHttpClient1.addHeader("User-Agent", "request");
         asyncHttpClient1.addHeader("Authorization", "token a8d0fa76f1dbc00b8f0227b6bc1c619c9dd2406c");
-        asyncHttpClient1.get("https://api.github.com/search/users?q=syarif", new AsyncHttpResponseHandler(){
+        asyncHttpClient1.get("https://api.github.com/users", new AsyncHttpResponseHandler(){
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -134,17 +147,60 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject item = jsonArray.getJSONObject(i);
                         String username = item.getString("login");
-                        String avatar = item.getString("avatar_url");
-                        String url = item.getString("url");
-
-                        User user = new User();
-                        user.setUsername(username);
-                        user.setAvatar(avatar);
-                        user.setUrl(url);
-
-                        list.add(user);
+                        getListUsers(username);
                     }
-                    userAdapter.setData(list);
+                } catch (Exception e) {
+                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                progressBar.setVisibility(View.INVISIBLE);
+                String errorMessage;
+                switch (statusCode) {
+                    case 401:
+                        errorMessage = statusCode + " : Bad Request";
+                        break;
+                    case 403:
+                        errorMessage = statusCode + " : Forbiden";
+                        break;
+                    case 404:
+                        errorMessage = statusCode + " : Not Found";
+                        break;
+                    default:
+                        errorMessage =  statusCode + " : " + error.getMessage();
+                        break;
+                }
+                Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+
+    public void getSearchListUser(String username) {
+        progressBar.setVisibility(View.VISIBLE);
+        AsyncHttpClient asyncHttpClient1 = new AsyncHttpClient();
+        asyncHttpClient1.addHeader("User-Agent", "request");
+        asyncHttpClient1.addHeader("Authorization", "token a8d0fa76f1dbc00b8f0227b6bc1c619c9dd2406c");
+        asyncHttpClient1.get("https://api.github.com/search/users?q="+username, new AsyncHttpResponseHandler(){
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                progressBar.setVisibility(View.INVISIBLE);
+
+                String result = new String(responseBody);
+                Log.d(TAG, result);
+
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    JSONArray jsonArray = jsonObject.getJSONArray("items");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject item = jsonArray.getJSONObject(i);
+                        String username = item.getString("login");
+                        getListUsers(username);
+                    }
                 } catch (Exception e) {
                     Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
@@ -178,6 +234,19 @@ public class MainActivity extends AppCompatActivity {
     private void showRecyclerList(){
         rvUser.setLayoutManager(new LinearLayoutManager(this));
         rvUser.setAdapter(userAdapter);
+
+        userAdapter.setOnItemClickCallback(new UserAdapter.OnItemClickCallback() {
+            @Override
+            public void onItemClicked(User data) {
+                showSelectedUser(data);
+            }
+        });
+    }
+
+    private void showSelectedUser(User user){
+        Intent moveIntent = new Intent(MainActivity.this, DetailUser.class);
+        moveIntent.putExtra(DetailUser.EXTRA_ITEM, user);
+        startActivity(moveIntent);
     }
 
     @Override
@@ -195,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
                     list.clear();
-                    getListUser(query);
+                    getSearchListUser(query);
                     return true;
                 }
                 @Override
