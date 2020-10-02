@@ -11,9 +11,9 @@ public class User implements Parcelable {
     private String name;
     private String location;
     private String company;
-    private int repository;
-    private int following;
-    private int follower;
+    private String repository;
+    private String following;
+    private String follower;
 
     public String getName() {
         return name;
@@ -37,30 +37,6 @@ public class User implements Parcelable {
 
     public void setCompany(String company) {
         this.company = company;
-    }
-
-    public int getRepository() {
-        return repository;
-    }
-
-    public void setRepository(int repository) {
-        this.repository = repository;
-    }
-
-    public int getFollowing() {
-        return following;
-    }
-
-    public void setFollowing(int following) {
-        this.following = following;
-    }
-
-    public int getFollower() {
-        return follower;
-    }
-
-    public void setFollower(int follower) {
-        this.follower = follower;
     }
 
     public String getUsername() {
@@ -87,6 +63,30 @@ public class User implements Parcelable {
         this.url = url;
     }
 
+    public String getRepository() {
+        return repository;
+    }
+
+    public void setRepository(String repository) {
+        this.repository = repository;
+    }
+
+    public String getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(String following) {
+        this.following = following;
+    }
+
+    public String getFollower() {
+        return follower;
+    }
+
+    public void setFollower(String follower) {
+        this.follower = follower;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -100,9 +100,9 @@ public class User implements Parcelable {
         dest.writeString(name);
         dest.writeString(location);
         dest.writeString(company);
-        dest.writeInt(repository);
-        dest.writeInt(following);
-        dest.writeInt(follower);
+        dest.writeString(repository);
+        dest.writeString(following);
+        dest.writeString(follower);
     }
 
     User(){
@@ -116,9 +116,9 @@ public class User implements Parcelable {
         name = in.readString();
         location = in.readString();
         company = in.readString();
-        repository = in.readInt();
-        following = in.readInt();
-        follower = in.readInt();
+        repository = in.readString();
+        following = in.readString();
+        follower = in.readString();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {

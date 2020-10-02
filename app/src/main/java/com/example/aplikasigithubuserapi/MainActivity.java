@@ -77,9 +77,9 @@ public class MainActivity extends AppCompatActivity {
                         String name = jsonObject.getString("name");
                         String location = jsonObject.getString("location");
                         String company = jsonObject.getString("company");
-                        int repository = jsonObject.getInt("public_repos");
-                        int followers = jsonObject.getInt("followers");
-                        int following = jsonObject.getInt("following");
+                        String repository = jsonObject.getString("public_repos");
+                        String followers = jsonObject.getString("followers");
+                        String following = jsonObject.getString("following");
 
                         User user = new User();
                         user.setUsername(username);
