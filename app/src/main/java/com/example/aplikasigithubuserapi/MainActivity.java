@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         AsyncHttpClient asyncHttpClient1 = new AsyncHttpClient();
         asyncHttpClient1.addHeader("User-Agent", "request");
         asyncHttpClient1.addHeader("Authorization", "token a8d0fa76f1dbc00b8f0227b6bc1c619c9dd2406c");
-        asyncHttpClient1.get("https://api.github.com/search/users/"+username, new AsyncHttpResponseHandler(){
+        asyncHttpClient1.get("https://api.github.com/users/"+username, new AsyncHttpResponseHandler(){
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -190,9 +190,10 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, result);
 
                 try {
-                   JSONArray jsonArray = new JSONArray(result);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject item = jsonArray.getJSONObject(i);
+                   JSONObject jsonObject = new JSONObject(result);
+                   JSONArray dataArray = jsonObject.getJSONArray("items");
+                    for (int i = 0; i < dataArray.length(); i++) {
+                        JSONObject item = dataArray.getJSONObject(i);
                         String username = item.getString("login");
                         getListUsers(username);
                     }
